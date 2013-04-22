@@ -15,7 +15,8 @@
 			callbefore : undefined,
 			callback : undefined,
 			navButtons:true,
-			circular:true
+			circular:false,
+			pagination: true
 		}, options);
 			
 		return this.each(function(){
@@ -26,6 +27,7 @@
 				sliding = false,
 				$prev = null,
 				$next = null,
+				$pags = null,
 				
 				tryDisable = function(){
 					if(!setting.circular && $prev){
@@ -56,7 +58,8 @@
 						
 						if(next !=current && enabled){
 							sliding = true;
-							if(setting.callbefore){setting.callbefore();}
+							if(setting.callbefore){setting.callbefore();}						
+							
 							switch(setting.transition){
 								case 'opacity':
 									//
@@ -66,6 +69,7 @@
 									$slides.eq(next).css({'left':(dir*100)+'%'}).animate({'left':'0%'},setting.duration,function(){
 										current = next;
 										tryDisable();
+										if($pags){$pags.removeClass('flexslide-active').eq(next).addClass('flexslide-active');}
 										sliding = false;										
 										if(setting.callback){setting.callback();}
 									});
@@ -75,7 +79,6 @@
 					}
 				};
 				
-			//
 			if(setting.navButtons){
 				$prev = $('<span class="flexslide-nav flexslide-prev"></span>');
 				$next = $('<span class="flexslide-nav flexslide-next"></span>');
@@ -84,12 +87,31 @@
 				$prev.click(function(){change(-1);});
 				$next.not('.flexslide-disable').click(function(){change(1);});
 				
+			}			
+			if(setting.pagination){
+				var $paginator = $('<ul class="flexslide-pag"></ul>');
+				
+				for(var i=0;i<length;++i){
+					$paginator.append($('<li>'+(i+1)+'</li>'));
+				}
+				$pags = $paginator.find('li');
+				$pags.eq(current).addClass('flexslide-active');
+				$this.append($paginator);
+				
+				$pags.each(function(index){
+					$(this).click(function(){
+						if(current != index){
+							change(0,index);
+						}						
+					});
+				});
 			}
 			
 			//Start
 			if(current !=0){$slides.eq(current).css({'left':'0%'});$slides.eq(0).css({'left':'100%'});}
 			tryDisable();
-				
+			
+			//initial status
 				
 				
 				
