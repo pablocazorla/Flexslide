@@ -15,8 +15,10 @@
 			callbefore : undefined,
 			callback : undefined,
 			navButtons:true,
-			circular:false,
-			pagination: true
+			circular:true,
+			pagination: false,
+			autoplay:true,
+			autoplayTime:10000
 		}, options);
 			
 		return this.each(function(){
@@ -62,7 +64,17 @@
 							
 							switch(setting.transition){
 								case 'opacity':
-									//
+									$slides.eq(next).css({'z-index':'11'});
+									$slides.eq(current).animate({'opacity':'0'},setting.duration,function(){
+										$slides.eq(next).css({'z-index':'12'});
+										$slides.eq(current).css({'z-index':'10','opacity':'1'});
+										
+										current = next;
+										tryDisable();
+										if($pags){$pags.removeClass('flexslide-active').eq(next).addClass('flexslide-active');}
+										sliding = false;										
+										if(setting.callback){setting.callback();}
+									})
 									break;
 								default:
 									$slides.eq(current).animate({'left':(dir * -100)+'%'},setting.duration);
@@ -106,22 +118,29 @@
 					});
 				});
 			}
+			if(setting.autoplay){
+				setInterval(function(){
+					change(1);
+				},setting.autoplayTime);
+			}
 			
-			//Start
-			if(current !=0){$slides.eq(current).css({'left':'0%'});$slides.eq(0).css({'left':'100%'});}
+			//Start			
+			switch(setting.transition){
+				case 'opacity':
+					$slides.css({
+						'top':'0',
+						'left':'0',
+						'z-index':'10'
+					}).eq(current).css({
+						'z-index':'12'
+					});				
+					break;
+				default:
+					if(current !=0){$slides.eq(current).css({'left':'0%'});$slides.eq(0).css({'left':'100%'});}
+					break;
+			}
 			tryDisable();
 			
-			//initial status
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 		});
 	};
 })(jQuery);

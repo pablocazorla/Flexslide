@@ -3,8 +3,8 @@
 /* CORE */
 .flexslide{list-style: none;position:relative;overflow: hidden}
 .flexslide,.flexslide > li{margin:0;padding:0;display:block;width:100%;height:auto}
-.flexslide > li{position:absolute;top:0;left:100%}
-.flexslide > li:first-child{position:relative;left:0}
+.flexslide > li{position:absolute;top:0;left:100%;z-index:10;}
+.flexslide > li:first-child{position:relative;left:0;z-index:12;}
 .flexslide > li > img{width:100% !important;height:auto !important;max-width:1000% !important;display: block}
 .flexslide > .flexslide-nav{position:absolute;z-index:20;top:50%;display:block;cursor:pointer}
 .flexslide > .flexslide-nav.flexslide-disable{cursor:default}
